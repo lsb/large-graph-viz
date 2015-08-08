@@ -13,7 +13,7 @@ insert into vertices (name)
 
 insert into edges
   select case when v1.id < v2.id then v1.id else v2.id end,
-         case when v1.id < v2.id then v2.id else v1.id end,
+         case when v1.id < v2.id then v2.id else v1.id end, -- invariant: v2 is not higher degree than v1
          0
          from raw_edges e join vertices v1 on e.v1 = v1.name join vertices v2 on e.v2 = v2.name group by e.v1, e.v2;
 
@@ -25,7 +25,7 @@ with recursive
       from (select v1 as id from edges where level = LEVEL union all select v2 as id from edges where level = LEVEL)
       group by id)
   vcollapse1 (oldv, newv) as
-    (select e.v2, e.v1
+    (select e.v2, e.v1         -- easier order due to aforementioned invariant
        from edges e join degrees d1 on d1.id = e.v1 join degrees d2 on d2.id = e.v2
        where e.level = LEVEL
        order by d1.degree * 1.0 / d2.degree -- * (U(0,1) + N) -- if non-determinism is desired
