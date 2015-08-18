@@ -1,9 +1,15 @@
 -- ∃ M, ratio of edges to merge
 
+-- This differs from Hu because we only use Edge Collapse,
+-- and because we collapse a fixed number of edges per level regardless of topology.
+
 create table raw_edges (v1 text, v2 text);
 create table vertices (id integer primary key autoincrement, name text);
 create table vcollapse (oldv integer, newv integer, level smallint); -- pk (oldv, level); clustering idx newv;
 create table edges (v1 integer, v2 integer, level smallint, primary key (level, v1, v2));
+
+create table positions (v integer, level smallint, x float, y float, primary key (level, v));
+create table boolean_choice as select 0 as b union all select 1 as b;
 
 ---
 
