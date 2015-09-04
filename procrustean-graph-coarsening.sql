@@ -35,7 +35,7 @@ with recursive
        from edges e join degrees d1 on d1.id = e.v1 join degrees d2 on d2.id = e.v2
        where e.level = LEVEL
        order by d1.degree * 1.0 / d2.degree -- * (U(0,1) + N) -- if non-determinism is desired
-       limit (select count(*)/ <<<M>>> from edges where level = LEVEL))
+       limit (select ceil(cast(count(*) as real) / M) - 1 from edges where level = LEVEL)),
   collapsepaths (oldv, newv) as
     (select oldv, newv from vcollapse1
       union all
