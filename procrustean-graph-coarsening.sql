@@ -29,7 +29,7 @@ with recursive
   degrees (id, degree) as
     (select id, count(*)
       from (select v1 as id from edges where level = LEVEL union all select v2 as id from edges where level = LEVEL)
-      group by id)
+      group by id),
   vcollapse1 (oldv, newv) as
     (select e.v2, e.v1         -- easier order due to aforementioned invariant
        from edges e join degrees d1 on d1.id = e.v1 join degrees d2 on d2.id = e.v2
