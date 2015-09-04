@@ -29,7 +29,7 @@ with recursive
   boxes (box_id, parent_id, pop, x_min, y_min, x_max, y_max, x_center, y_center) as
   (select -1, null, count(*), min(x), min(y),
           1.1 * max(x) - 0.1 * min(x), 1.1 * max(y) - 0.1 * min(y), avg(x), avg(y)
-     from positions where level = LEVEL
+     from inflight_positions
      union all
    select max(box_id,0)*4 + is_top.b * 2 + is_right.b,
           box_id,
