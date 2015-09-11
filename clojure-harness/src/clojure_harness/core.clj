@@ -50,8 +50,6 @@
               (if (= energy energy') (rerandomize-inflight-positions! cnxn))
               (recur level energy' (if (< energy' energy) (min (Math/sqrt init-step) (/ step step-mul)) init-step)) ))
         (do (land-positions! cnxn level)
-            (prn {:inflight-positions (clojure.java.jdbc/query cnxn ["select * from inflight_positions"])
-                  :positions (clojure.java.jdbc/query cnxn ["select * from positions"])})
             (add-next-positions! cnxn (- level 1))
             (delete-repulsions! cnxn)
             (delete-attractions! cnxn)
