@@ -18,3 +18,15 @@
       (randomize-nodes! c levels)
       (update-positions! c 0.2 1 500 levels 0.01 0.01 0.9)
       (is (> 6.0 (:stdev (first (angle-stdev c 0 node-count))))))))
+
+(deftest single-level-ring-test
+  (testing "A single-level fdl of a 16-node ring comes out looking like a ring"
+    (let [c (db-cnxn ":memory:")
+          node-count 16]
+      (init-db! c)
+      (create-raw-edges! c)
+      (create-a-ring! c (- node-count 1))
+      (import-from-raw! c)
+      (randomize-nodes! c 0)
+      (update-positions! c 0.2 1 500 0 0.01 0.01 0.9)
+      (is (> 6.0 (:stdev (first (angle-stdev c 0 node-count))))))))
