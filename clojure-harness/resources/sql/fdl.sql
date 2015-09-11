@@ -108,7 +108,7 @@ insert into forces select v, a.x_vec + r.x_vec, a.y_vec + r.y_vec from attractio
 select sum(x_vec * x_vec + y_vec * y_vec) as graph_energy from forces
 
 -- name: is-converged
-select sum((:step / :step) * sqrt(x_vec * x_vec + y_vec * y_vec)) < :k * :tol as is_converged from forces
+select sum(:step * sqrt(x_vec * x_vec + y_vec * y_vec)) < :k * :tol as is_converged from forces
 
 -- name: replace-inflight-positions!
 replace into inflight_positions
