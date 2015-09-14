@@ -134,3 +134,16 @@ delete from forces
 
 -- name: delete-quadtree!
 delete from quadtree
+
+-- name: svg-bounding-box-at-level
+select ('<svg width="100%" height="100%" viewBox="' || min(x) || ' ' || min(y) || ' ' || (max(x)-min(x)) || ' ' || (max(y)-min(y)) || '">') as svg
+  from positions where level = :level
+
+-- name: svg-nodes-at-level
+select '<circle r="0.1%" cx="' || x || '" cy="' || y || '"><title>' ||
+  replace(replace(replace(name,'&','&amp;'),'<','&lt;'),'>','&gt;') || '</title></circle>' as circle
+  from positions join vertices on positions.v = vertices.id where level = :level
+
+-- name: svg-edges-at-level
+select '<line x1="' || p1.x || '" y1="' || p1.y || '" x2="' || p2.x || '" y2="' || p2.y || '" style="stroke: grey; stroke-width: 0.1%; stroke-opacity: 25%"/>' as line
+  from positions p1 join positions p2 using (level) join edges e using (level) where e.v1 = p1.v and e.v2 = p2.v and level = :level

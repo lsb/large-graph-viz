@@ -57,6 +57,13 @@
             (delete-quadtree! cnxn)
             (if (pos? level) (recur (- level 1) 0 init-step)))))))
 
+(defn svg [cnxn]
+  "Only suitable for a few million edges. TODO: pass a writer in"
+  (let [svg (map :svg (svg-bounding-box-at-level cnxn 0))
+        nodes (map :circle (svg-nodes-at-level cnxn 0))
+        edges (map :line (svg-edges-at-level cnxn 0))]
+    (apply str (concat svg nodes edges ["</svg>"]))))
+
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
