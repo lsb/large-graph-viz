@@ -30,12 +30,15 @@
 
 (defn get-graph-energy [cnxn] (:graph_energy (first (graph-energy cnxn))))
 
+(def CORES 16)
+
 (defn update-positions! [cnxn c k Ө level tol init-step step-mul & {:keys [iter-printf] :or {iter-printf nil}}]
   (loop [level level
          energy Double/POSITIVE_INFINITY
          step init-step]
     (make-quadtree! cnxn)
-    (make-repulsions! cnxn c k Ө)
+    (time (dotimes [corenum CORES]
+      (make-repulsions! cnxn CORES corenum c k Ө)))
     (make-attractions! cnxn k level)
     (make-forces! cnxn)
     (let [not-converged? (zero? (:is_converged (first (is-converged cnxn step k tol))))]

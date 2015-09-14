@@ -80,7 +80,7 @@ insert into quadtree select * from boxes where box_id >= 0 and pop > 0
 -- name: make-repulsions!
 with recursive
   box_repulsions (v, box_id, x_vec, y_vec, is_terminal) as
-   (select v, -1, null, null, 0 = 1 from inflight_positions
+   (select v, -1, null, null, 0 = 1 from inflight_positions where v % :cores = :corenum
     union all
     select br_parent.v,
            q.box_id,
